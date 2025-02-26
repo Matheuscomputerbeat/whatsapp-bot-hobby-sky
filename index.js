@@ -15,7 +15,6 @@ client.on('qr', (qr) => {
 // Após autenticação, envia a mensagem para os grupos
 client.on('ready', () => {
     console.log('Bot está pronto!');
-    sendDailyMessage();
     scheduleDailyMessage();
 });
 
@@ -41,14 +40,21 @@ https://s.click.aliexpress.com/e/_oFYht2n
 
 HOBBY SKY É PROMOÇÕES!`;
 
-    // Substitua pelo número do grupo que você deseja enviar a mensagem
-    const groupID = 'seu-grupo-id-aqui@group.whatsapp.com';
-    const group = await client.getChats().then(chats => chats.find(chat => chat.id._serialized === groupID));
-    if (group) {
-        await group.sendMessage(message);
-        console.log('Mensagem enviada!');
-    } else {
-        console.log('Grupo não encontrado!');
+    // IDs dos grupos
+    const groupIds = [
+        'K7nQqRGIJgTI3HokoU56SM',  // ID do grupo 1
+        'BUVFR176Fth82sc0l3TDV8'   // ID do grupo 2
+    ];
+
+    // Pega todos os chats
+    const chats = await client.getChats();
+
+    // Enviar a mensagem para os grupos com os IDs fornecidos
+    for (const chat of chats) {
+        if (chat.isGroup && groupIds.includes(chat.id._serialized)) {
+            await chat.sendMessage(message);
+            console.log(`Mensagem enviada para o grupo: ${chat.name}`);
+        }
     }
 };
 
